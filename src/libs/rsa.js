@@ -334,10 +334,12 @@ module.exports.Key = (function () {
         var progress = 0;
 
         for (var i = 0; i < buffers.length; i++) {
+            progressMessage({action: 'encrypting', progress: progress});
+
             results.push(this.encryptEngine.encrypt(buffers[i], usePrivate));
 
             progress = Math.floor(i+1/buffersCount);
-            progressMessage({action: 'encrypting', progress: progress});
+            
         }
 
         return Buffer.concat(results);
@@ -361,12 +363,14 @@ module.exports.Key = (function () {
         var progress = 0;
 
         for (var i = 0; i < buffersCount; i++) {
+            progressMessage({action: 'decrypting', progress: progress});
+
             offset = i * this.encryptedDataLength;
             length = offset + this.encryptedDataLength;
             result.push(this.encryptEngine.decrypt(buffer.slice(offset, Math.min(length, buffer.length)), usePublic));
             
             progress = Math.floor(i+1/buffersCount);
-            progressMessage({action: 'encrypting', progress: progress});
+            
         }
 
         return Buffer.concat(result);
