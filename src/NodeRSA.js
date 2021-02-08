@@ -250,6 +250,29 @@ module.exports = (function () {
     };
 
     /**
+     * Encrypting data method with public key
+     *
+     * @param buffer {string|number|object|array|Buffer} - data for encrypting. Object and array will convert to JSON string.
+     * @param encoding {string} - optional. Encoding for output result, may be 'buffer', 'binary', 'hex' or 'base64'. Default 'buffer'.
+     * @param source_encoding {string} - optional. Encoding for given string. Default utf8.
+     * @returns {string|Buffer}
+     */
+    NodeRSA.prototype.encryptWithProgressMessages = function (buffer, encoding, source_encoding, progressMessage) {
+        return this.$$encryptKeyWithProgressMessages(false, buffer, encoding, source_encoding, progressMessage);
+    };
+
+    /**
+     * Decrypting data method with private key
+     *
+     * @param buffer {Buffer} - buffer for decrypting
+     * @param encoding - encoding for result string, can also take 'json' or 'buffer' for the automatic conversion of this type
+     * @returns {Buffer|object|string}
+     */
+    NodeRSA.prototype.decryptWithProgressMessages = function (buffer, encoding, progressMessage) {
+        return this.$$decryptKeyWithProgressMessages(false, buffer, encoding, progressMessage);
+    };
+
+    /**
      * Encrypting data method with private key
      *
      * Parameters same as `encrypt` method
@@ -291,6 +314,41 @@ module.exports = (function () {
         try {
             buffer = _.isString(buffer) ? Buffer.from(buffer, 'base64') : buffer;
             var res = this.keyPair.decrypt(buffer, usePublic);
+
+            if (res === null) {
+                throw Error('Key decrypt method returns null.');
+            }
+
+            return this.$getDecryptedData(res, encoding);
+        } catch (e) {
+            throw Error('Error during decryption (probably incorrect key). Original error: ' + e);
+        }
+    };
+
+    /**
+     * Encrypting data method with custom key
+     */
+    NodeRSA.prototype.$$encryptKeyWithProgressMessages = function (usePrivate, buffer, encoding, source_encoding, progressMessage) {
+        try {
+            var res = this.keyPair.encryptWithProgressMessages(this.$getDataForEncrypt(buffer, source_encoding), usePrivate, progressMessage);
+
+            if (encoding == 'buffer' || !encoding) {
+                return res;
+            } else {
+                return res.toString(encoding);
+            }
+        } catch (e) {
+            throw Error('Error during encryption. Original error: ' + e);
+        }
+    };
+
+    /**
+     * Decrypting data method with custom key
+     */
+    NodeRSA.prototype.$$decryptKeyWithProgressMessages = function (usePublic, buffer, encoding, progressMessage) {
+        try {
+            buffer = _.isString(buffer) ? Buffer.from(buffer, 'base64') : buffer;
+            var res = this.keyPair.decryptWithProgressMessages(buffer, usePublic, progressMessage);
 
             if (res === null) {
                 throw Error('Key decrypt method returns null.');
