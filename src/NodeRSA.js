@@ -257,7 +257,7 @@ module.exports = (function () {
      * @param source_encoding {string} - optional. Encoding for given string. Default utf8.
      * @returns {string|Buffer}
      */
-    NodeRSA.prototype.encryptWithProgressMessages = function (buffer, encoding, source_encoding, progressMessage) {
+    NodeRSA.prototype.encryptWithProgressMessages = function (buffer, progressMessage, encoding, source_encoding) {
         return this.$$encryptKeyWithProgressMessages(false, buffer, encoding, source_encoding, progressMessage);
     };
 
@@ -268,7 +268,7 @@ module.exports = (function () {
      * @param encoding - encoding for result string, can also take 'json' or 'buffer' for the automatic conversion of this type
      * @returns {Buffer|object|string}
      */
-    NodeRSA.prototype.decryptWithProgressMessages = function (buffer, encoding, progressMessage) {
+    NodeRSA.prototype.decryptWithProgressMessages = function (buffer, progressMessage, encoding) {
         return this.$$decryptKeyWithProgressMessages(false, buffer, encoding, progressMessage);
     };
 
