@@ -333,6 +333,8 @@ module.exports.Key = (function () {
 
         var progress = 0;
 
+        console.log(`buffers.length = ${buffers.length} / ${buffersCount}`);
+
         for (var i = 0; i < buffers.length; i++) {
             results.push(this.encryptEngine.encrypt(buffers[i], usePrivate));
 
