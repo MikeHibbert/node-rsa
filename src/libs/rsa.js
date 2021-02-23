@@ -338,9 +338,9 @@ module.exports.Key = (function () {
         for (var i = 0; i < buffers.length; i++) {
             results.push(this.encryptEngine.encrypt(buffers[i], usePrivate));
 
-            progress = Math.floor(i+1/buffersCount*100);
+            progress = Math.floor(((i+1)/buffersCount)*100);
             console.log(`${i} of ${buffersCount} - progress = ${progress}`);
-            
+
             progressMessage({action: 'encrypting', progress: progress});
             
         }
@@ -370,7 +370,7 @@ module.exports.Key = (function () {
             length = offset + this.encryptedDataLength;
             result.push(this.encryptEngine.decrypt(buffer.slice(offset, Math.min(length, buffer.length)), usePublic));
             
-            progress = Math.floor(i+1/buffersCount*100);
+            progress = Math.floor((i+1)/buffersCount*100);
             progressMessage({action: 'decrypting', progress: progress});
         }
 
