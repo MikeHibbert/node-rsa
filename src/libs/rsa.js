@@ -339,6 +339,8 @@ module.exports.Key = (function () {
             results.push(this.encryptEngine.encrypt(buffers[i], usePrivate));
 
             progress = Math.floor(i+1/buffersCount*100);
+            console.log(`${i} of ${buffersCount} - progress = ${progress}`);
+            
             progressMessage({action: 'encrypting', progress: progress});
             
         }
